@@ -1,0 +1,28 @@
+{
+  "name": "api-solid",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start:dev": "tsx watch src/server.ts",
+    "start": "node build/server.js",
+    "build": "tsup src --out-dir build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@types/node": "^22.14.1",
+    "eslint": "9.24.0",
+    "tsup": "^8.4.0",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.3",
+    "@rocketseat/eslint-config": "2.2.2"
+  },
+  "dependencies": {
+    "dotenv": "16.5.0",
+    "fastify": "5.3.0",
+    "zod": "3.24.2"
+  }
+}
