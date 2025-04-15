@@ -1,3 +1,4 @@
 .env
+generated/*
 build
 node_modules
