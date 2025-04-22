@@ -2,25 +2,27 @@ import { expect, describe, it, beforeEach, vi, afterEach } from 'vitest'
 import { CheckInUseCase } from './check-in'
 import { InMemoryGymsRepository } from '../repositories/in-memory/in-memory-gyms-repository'
 import { InMemoryCheckInRepository } from '../repositories/in-memory/in-memory-check-ins-repository'
-import { Decimal } from 'generated/prisma/runtime/library'
+import { Prisma } from '../../generated/prisma'
+import { MaxDistanceError } from './errors/max-distance-error'
+import { MaxNumberOfCheckInsError } from './errors/max-number-of-check-ins-error'
 
 let checkInRepository: InMemoryCheckInRepository
 let gymsRepository: InMemoryGymsRepository
 let sut: CheckInUseCase
 
 describe('Get User Profile Use Case', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     checkInRepository = new InMemoryCheckInRepository()
     gymsRepository = new InMemoryGymsRepository()
     sut = new CheckInUseCase(checkInRepository, gymsRepository)
 
-    gymsRepository.items.push({
+    await gymsRepository.create({
       phone: '',
       id: 'gym-01',
       description: '',
       title: 'Javascript Gym',
-      latitude: new Decimal(-21.9885649),
-      longitutde: new Decimal(-47.9162678)
+      latitude: -21.9885649,
+      longitude: -47.916267
     })
 
     vi.useFakeTimers()
@@ -58,7 +60,7 @@ describe('Get User Profile Use Case', () => {
         userLatitude: -21.9885649,
         userLongitude: -47.9162678,
       }),
-    ).rejects.toBeInstanceOf(Error)
+    ).rejects.toBeInstanceOf(MaxNumberOfCheckInsError)
   })
 
   it('should be able to check in twice but in different days', async () => {
@@ -89,8 +91,8 @@ describe('Get User Profile Use Case', () => {
       id: 'gym-02',
       description: '',
       title: 'Javascript Gym',
-      latitude: new Decimal(-20.6384656),
-      longitutde: new Decimal(-51.1445595)
+      latitude: new Prisma.Decimal(-20.6384656),
+      longitude: new Prisma.Decimal(-51.1445595)
     })
 
     await expect(async () =>
@@ -100,6 +102,6 @@ describe('Get User Profile Use Case', () => {
         userLatitude: -21.9885649,
         userLongitude: -47.9162678,
       })
-    ).rejects.toBeInstanceOf(Error)
+    ).rejects.toBeInstanceOf(MaxDistanceError)
   })
 })
