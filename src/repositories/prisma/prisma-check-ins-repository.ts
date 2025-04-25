@@ -3,7 +3,7 @@ import { CheckInRepository } from "../check-ins-repository";
 import { prisma } from "@/lib/prisma";
 import dayjs from "dayjs";
 
-export class PrismaCheckInsrepository implements CheckInRepository {
+export class PrismaCheckInsRepository implements CheckInRepository {
   async save(data: CheckIn) {
     const checkIn = await prisma.checkIn.update({
       where: {
